@@ -1,1 +1,153 @@
-Module related to a basic course I worked on 
+[TABS]
+_layout.tsx
+
+import { Tabs } from "expo-router";
+import { Ionicons } from "@expo/vector-icons";
+
+export default function TabsLayout() {
+  return (
+    <Tabs
+      screenOptions={{
+        tabBarActiveTintColor: "#ffd33d",
+        headerStyle: {
+           backgroundColor: "#25292e",
+        },
+        headerShadowVisible: false,
+        headerTintColor: "#fff",
+        tabBarStyle: {
+          backgroundColor: "#25292e"
+        },
+      }}
+    >
+      <Tabs.Screen
+        name="index"
+        options={{
+          headerTitle: "Sticker Smash",
+          tabBarIcon: ({ focused, color }) => (
+            <Ionicons
+              name={focused ? "eye-sharp" : "eye-outline"}
+              color={color}
+              size={25}
+          />
+          ),
+        }}
+      />
+      <Tabs.Screen name="+not-found" options={{}} />
+    </Tabs>
+  );
+}
+
+about.tsx
+
+import { Text, View, StyleSheet} from "react-native";
+export default function AboutScreen() {
+  return (
+    <View style={styles.container}>
+    <Text style={styles.text}>welcome to the pain room</Text>
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+container: {
+  flex: 1,
+  justifyContent: "center",
+  alignItems: "center",
+  backgroundColor: "#111111",
+ },
+text:{
+  color: "white",
+  textAlign: "center",
+ },
+}) 
+
+index.tsx
+
+import { Text, View, StyleSheet} from "react-native";
+import { Colors } from "react-native/Libraries/NewAppScreen";
+
+
+
+export default function AboutScreen() {
+  return (
+    <View style={styles.container}>
+    <Text style={styles.text}>Sticker Smash</Text>
+  
+   </View>
+  )
+}
+
+
+const styles = StyleSheet.create({
+container: {
+  flex: 1,
+  justifyContent: "center",
+  alignItems: "center",
+  backgroundColor: "#333",
+ },
+text:{
+  color: "white",
+
+ },
+
+ button: {
+  fontSize: 20,
+  textDecorationLine: "underline",
+  color: "#fff",
+},
+})
+
+(APP)
+
+_layout.tsx
+import { Stack } from "expo-router";
+import {StatusBar} from "expo-status-bar"
+import { LogBox } from "react-native";
+
+
+LogBox.ignoreAllLogs(true);
+
+export default function RootLayout() {
+  return (
+    <>
+    <StatusBar style="light" />
+    <Stack>
+     <Stack.Screen 
+       name="(tabs)"
+       options={{
+       headerShown: false, 
+      }}
+      
+    
+     />
+     <Stack.Screen name ="+not-found" options={{}} />
+
+    </Stack>
+    </>
+  )
+}
+
++not-found.tsx
+
+import{Text,View, StyleSheet} from "react-native";
+import{Link, Stack} from "expo-router";
+
+export default function NotFound() {
+    return (
+      <View style={styles.container}>
+      <Text style={styles.text}>GO back or you will regret it!</Text>
+      </View>
+    );
+  }
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      justifyContent: "center",
+      alignItems: "center",
+      backgroundColor: "#400",
+     },
+    text:{
+      color: "white",
+    
+     },
+    }) 
