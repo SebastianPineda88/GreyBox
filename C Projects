@@ -5,32 +5,29 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-Car_Inventory"
         mc:Ignorable="d"
-        Title="Car Inventory" Height="350" Width="10"
+        Title="Car Inventory" Height="350" Width="350"
         WindowStartupLocation="CenterScreen"
-        MinHeight="350" MinWidth="400"
-        Background="#F0F0F0" FontFamily="Tahoma" FontSize="12">
+        MinHeight="350" MinWidth="350"
+        Background="#A0A0A0" FontFamily="Tahoma" FontSize="12">
     <Grid>
         <Grid.RowDefinitions>
-
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
-
         </Grid.RowDefinitions>
-        <Label Grid.Row ="0" Content="Make:" HorizontalContentAlignment="Right" VerticalContentAlignment="Bottom" Margin="10,0,5,0" />
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="100"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Label Grid.Row="0" Content="Make:" HorizontalContentAlignment="Right" VerticalContentAlignment="Bottom" Margin="10,0,5,0" />
         <Label Grid.Row="1" Content="Model:" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" Margin="10,0,5,0" />
         <Label Grid.Row="2" Content="Year:" HorizontalContentAlignment="Right" VerticalAlignment="Bottom" Margin="10,0,5,0" />
         <Label Grid.Row="3" Content="Price:" HorizontalContentAlignment="Right" VerticalAlignment="Bottom" Margin="10,0,5,0" />
-
+        
         <TextBox Grid.Row="0" Grid.Column="1" x:Name="MakeText"  HorizontalAlignment="Left" Margin="10,0,0,0" Width="100" Height="20" BorderBrush="#A0A0A0" BorderThickness="2"/>
         <TextBox Grid.Row="1" Grid.Column="1" x:Name="ModelText" HorizontalAlignment="Left" Margin="10,0,0,0" Width="100" Height="20" BorderBrush="#A0A0A0" BorderThickness="2"/>
         <TextBox Grid.Row="2" Grid.Column="1" x:Name="YearText"  HorizontalAlignment="Left" Margin="10,0,0,0" Width="100" Height="20" BorderBrush="#A0A0A0" BorderThickness="2" />
         <TextBox Grid.Row="3" Grid.Column="1" x:Name="PriceText" HorizontalAlignment="Left" Margin="10,0,0,0" Width="20" Height="20" BorderBrush="#A0A0A0" BorderThickness="2" />
-
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="150"/>
-            <ColumnDefinition Width="*"/>
-        </Grid.ColumnDefinitions>
     </Grid>
-   </Window>
+</Window>
