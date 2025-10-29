@@ -165,23 +165,23 @@
         mc:Ignorable="d"
         Title="Car Inventory" Height="350" Width="350"
         WindowStartupLocation="CenterScreen"
-        MinHeight="350" MinWidth="350"
-        Background="#A0A0A0" FontFamily="Tahoma" FontSize="12"
+        MinHeight="30" MinWidth="350"
+        Background="LightGray" FontFamily="Tahoma" FontSize="12"
         WindowStyle="None"
         AllowsTransparency="True">
 
     <Window.Resources>
-        <!-- Gradient: Navy Blue → White -->
+        <!-- Gradient: Navy Blue to White -->
         <LinearGradientBrush x:Key="TitleGradient" StartPoint="0,0" EndPoint="1,0">
             <GradientStop Color="#000080" Offset="0"/>
             <GradientStop Color="#0000CD" Offset="0.5"/>
             <GradientStop Color="White" Offset="1"/>
         </LinearGradientBrush>
 
-        <!-- Classic XP Button Style (FIXED) -->
+        <!-- Classic XP Button Style -->
         <Style x:Key="TitleButton" TargetType="Button">
-            <Setter Property="Width" Value="20"/>
-            <Setter Property="Height" Value="20"/>
+            <Setter Property="Width" Value="18"/>
+            <Setter Property="Height" Value="18"/>
             <Setter Property="Background" Value="#E0E0E0"/>
             <Setter Property="Foreground" Value="Black"/>
             <Setter Property="FontWeight" Value="Bold"/>
@@ -192,24 +192,20 @@
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
                         <Grid>
-                            <!-- Outer Border -->
                             <Border Background="{TemplateBinding Background}"
                                     BorderBrush="#808080"
                                     BorderThickness="1"
                                     CornerRadius="1">
-                                <!-- Inner Highlight -->
                                 <Border x:Name="InnerBorder"
                                         Background="Transparent"
                                         BorderBrush="White"
                                         BorderThickness="1,1,0,0"
                                         Margin="1"/>
                             </Border>
-                            <!-- Content on top -->
                             <ContentPresenter HorizontalAlignment="Center"
                                               VerticalAlignment="Center"
-                                              Margin="2"/>
+                                              Margin="1"/>
                         </Grid>
-
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
                                 <Setter Property="Background" Value="#C0E0FF"/>
@@ -225,12 +221,82 @@
                 </Setter.Value>
             </Setter>
         </Style>
+
+        <!-- Boxed Button Style (Same as Header) -->
+        <Style x:Key="BoxedButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="{Binding RelativeSource={RelativeSource AncestorType=Grid}, Path=Background}"/>
+            <Setter Property="Foreground" Value="Black"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Padding" Value="4,2"/>
+            <Setter Property="Margin" Value="0,0,8,0"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="OuterBorder"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="#808080"
+                                BorderThickness="1"
+                                CornerRadius="0">
+                            <Border BorderBrush="White"
+                                    BorderThickness="1,1,0,0"
+                                    Margin="1">
+                                <ContentPresenter HorizontalAlignment="Center"
+                                                  VerticalAlignment="Center"/>
+                            </Border>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="OuterBorder" Property="Background" Value="#C0E0FF"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="OuterBorder" Property="Background" Value="#80C0FF"/>
+                                <Setter TargetName="OuterBorder" Property="BorderThickness" Value="0,0,1,1"/>
+                                <Setter TargetName="OuterBorder" Property="BorderBrush" Value="#808080"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- NEW: Dropdown Button Style (Small Square) -->
+        <Style x:Key="DropdownButtonStyle" TargetType="Button">
+            <Setter Property="Width" Value="20"/>
+            <Setter Property="Height" Value="20"/>
+            <Setter Property="Background" Value="LightGray"/>
+            <Setter Property="BorderBrush" Value="#808080"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}">
+                            <Path Data="M 2,6 L 8,12 L 14,6 Z" 
+                                  Fill="Black" 
+                                  Stretch="Fill" 
+                                  Width="10" Height="6"
+                                  HorizontalAlignment="Center"
+                                  VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#C0E0FF"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter Property="Background" Value="#80C0FF"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
     </Window.Resources>
 
     <!-- MAIN GRID -->
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="20"/>
+            <RowDefinition Height="18"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
@@ -239,7 +305,7 @@
                 MouseLeftButtonDown="TitleBar_MouseDown">
             <Grid>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="20"/>
+                    <ColumnDefinition Width="30"/>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="100"/>
                 </Grid.ColumnDefinitions>
@@ -257,13 +323,13 @@
                 <StackPanel Grid.Column="2" Orientation="Horizontal" 
                             HorizontalAlignment="Right" VerticalAlignment="Center">
                     <Button Content="_" Style="{StaticResource TitleButton}" Click="Minimize_Click"/>
-                    <Button Content="☐" Style="{StaticResource TitleButton}" Click="Maximize_Click"/>
+                    <Button Content="Square" Style="{StaticResource TitleButton}" Click="Maximize_Click"/>
                     <Button Content="X" Style="{StaticResource TitleButton}" Click="Close_Click"/>
                 </StackPanel>
             </Grid>
         </Border>
 
-        <!-- YOUR CONTENT (100% UNCHANGED) -->
+        <!-- CONTENT GRID -->
         <Grid Grid.Row="1">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
@@ -271,22 +337,129 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <!-- Header -->
+                <RowDefinition Height="*"/>
+                <!-- TextBox -->
+                <RowDefinition Height="Auto"/>
+                <!-- Buttons -->
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="100"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <Label Grid.Row="0" Content="Make:" HorizontalContentAlignment="Right" VerticalContentAlignment="Bottom" Margin="10,0,5,0" />
-            <Label Grid.Row="1" Content="Model:" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" Margin="10,0,5,0" />
-            <Label Grid.Row="2" Content="Year:" HorizontalContentAlignment="Right" VerticalAlignment="Bottom" Margin="10,0,5,0" />
-            <Label Grid.Row="3" Content="Price:" HorizontalContentAlignment="Right" VerticalAlignment="Bottom" Margin="10,0,5,0" />
-            <Label Grid.Row="4" Content="New:" HorizontalContentAlignment="Right" VerticalAlignment="Bottom" Margin="10,0,5,0" />
 
-            <TextBox Grid.Row="0" Grid.Column="1" x:Name="MakeText"  HorizontalAlignment="Left" Margin="10,0,0,0" Width="100" Height="20" BorderBrush="#A0A0A0" BorderThickness="2"/>
-            <TextBox Grid.Row="1" Grid.Column="1" x:Name="ModelText" HorizontalAlignment="Left" Margin="10,0,0,0" Width="100" Height="20" BorderBrush="#A0A0A0" BorderThickness="2"/>
-            <TextBox Grid.Row="2" Grid.Column="1" x:Name="YearText"  HorizontalAlignment="Left" Margin="10,0,0,0" Width="100" Height="20" BorderBrush="#A0A0A0" BorderThickness="2" />
-            <TextBox Grid.Row="3" Grid.Column="1" x:Name="PriceText" HorizontalAlignment="Left" Margin="10,0,0,0" Width="100" Height="20" BorderBrush="#A0A0A0" BorderThickness="2" />
-            <TextBox Grid.Row="4" Grid.Column="1" x:Name="NewText" HorizontalAlignment="Left" Margin="10,0,0,0" Width="20" Height="20" BorderBrush="#A0A0A0" BorderThickness="2" />
+            <!-- INPUT FIELDS -->
+            <Label Grid.Row="0" Content="Make:" HorizontalContentAlignment="Right" FontWeight="Bold" VerticalContentAlignment="Bottom" Margin="10,0,5,0" />
+            <Label Grid.Row="1" Content="Model:" HorizontalContentAlignment="Right" FontWeight="Bold" VerticalContentAlignment="Center" Margin="10,0,5,0" />
+            <Label Grid.Row="2" Content="Year:" HorizontalContentAlignment="Right" FontWeight="Bold" VerticalAlignment="Bottom" Margin="10,0,5,0" />
+            <Label Grid.Row="3" Content="Price:" HorizontalContentAlignment="Right" FontWeight="Bold" VerticalAlignment="Bottom" Margin="10,0,5,0" />
+            <Label Grid.Row="4" Content="New:" HorizontalContentAlignment="Right" FontWeight="Bold" VerticalAlignment="Bottom" Margin="10,0,5,0" />
+
+            <!-- MAKE: TextBox + Square Dropdown Button -->
+            <TextBox Grid.Row="0" Grid.Column="1" x:Name="MakeText"
+                     HorizontalAlignment="Left" VerticalAlignment="Center"
+                     Margin="10,0,35,0" Width="100" Height="20"
+                     BorderBrush="#A0A0A0" BorderThickness="2"/>
+            <Button Grid.Column="1"
+                    Style="{StaticResource DropdownButtonStyle}"
+                    HorizontalAlignment="Left" VerticalAlignment="Center"
+                    Margin="110,0,0,0"
+                    Click="MakeDropdown_Click"/>
+
+            <!-- MODEL: Normal TextBox -->
+            <TextBox Grid.Row="1" Grid.Column="1" x:Name="ModelText"
+                     HorizontalAlignment="Left" Margin="10,0,0,0" Width="120" Height="20"
+                     BorderBrush="#A0A0A0" BorderThickness="2"/>
+
+            <!-- YEAR: TextBox + Square Dropdown Button -->
+            <TextBox Grid.Row="2" Grid.Column="1" x:Name="YearText"
+                     HorizontalAlignment="Left" VerticalAlignment="Center"
+                     Margin="10,0,35,0" Width="100" Height="20"
+                     BorderBrush="#A0A0A0" BorderThickness="2"/>
+            <Button Grid.Row="2" Grid.Column="1"
+                    Style="{StaticResource DropdownButtonStyle}"
+                    HorizontalAlignment="Center" VerticalAlignment="Center"
+                    Margin="0,0,10,0"
+                    Click="YearDropdown_Click"/>
+
+            <!-- PRICE & NEW -->
+            <TextBox Grid.Row="3" Grid.Column="1" x:Name="PriceText"
+                     HorizontalAlignment="Left" Margin="10,0,0,0" Width="120" Height="20"
+                     BorderBrush="#A0A0A0" BorderThickness="2"/>
+            <TextBox Grid.Row="4" Grid.Column="1" x:Name="NewText"
+                     HorizontalAlignment="Left" Margin="10,0,0,0" Width="20" Height="20"
+                     BorderBrush="#A0A0A0" BorderThickness="2"/>
+
+            <!-- HORIZONTAL HEADER ROW (BOXED) -->
+            <StackPanel Grid.Row="6" Grid.ColumnSpan="2" Orientation="Horizontal" Margin="10,10,10,5">
+                <Border Background="{Binding RelativeSource={RelativeSource AncestorType=Grid}, Path=Background}"
+                        BorderBrush="#808080" BorderThickness="1" CornerRadius="0" Margin="0,0,8,0">
+                    <Border BorderBrush="White" BorderThickness="1,1,0,0" Margin="1">
+                        <Label Content="New" FontWeight="Bold" Foreground="Black" Padding="4,2" Margin="0"/>
+                    </Border>
+                </Border>
+                <Border Background="{Binding RelativeSource={RelativeSource AncestorType=Grid}, Path=Background}"
+                        BorderBrush="#808080" BorderThickness="1" CornerRadius="0" Margin="0,0,8,0">
+                    <Border BorderBrush="White" BorderThickness="1,1,0,0" Margin="1">
+                        <Label Content="ID" FontWeight="Bold" Foreground="Black" Padding="4,2" Margin="0"/>
+                    </Border>
+                </Border>
+                <Border Background="{Binding RelativeSource={RelativeSource AncestorType=Grid}, Path=Background}"
+                        BorderBrush="#808080" BorderThickness="1" CornerRadius="0" Margin="0,0,8,0">
+                    <Border BorderBrush="White" BorderThickness="1,1,0,0" Margin="1">
+                        <Label Content="Make" FontWeight="Bold" Foreground="Black" Padding="4,2" Margin="0"/>
+                    </Border>
+                </Border>
+                <Border Background="{Binding RelativeSource={RelativeSource AncestorType=Grid}, Path=Background}"
+                        BorderBrush="#808080" BorderThickness="1" CornerRadius="0" Margin="0,0,8,0">
+                    <Border BorderBrush="White" BorderThickness="1,1,0,0" Margin="1">
+                        <Label Content="Model" FontWeight="Bold" Foreground="Black" Padding="4,2" Margin="0"/>
+                    </Border>
+                </Border>
+                <Border Background="{Binding RelativeSource={RelativeSource AncestorType=Grid}, Path=Background}"
+                        BorderBrush="#808080" BorderThickness="1" CornerRadius="0" Margin="0,0,8,0">
+                    <Border BorderBrush="White" BorderThickness="1,1,0,0" Margin="1">
+                        <Label Content="Year" FontWeight="Bold" Foreground="Black" Padding="4,2" Margin="0"/>
+                    </Border>
+                </Border>
+                <Border Background="{Binding RelativeSource={RelativeSource AncestorType=Grid}, Path=Background}"
+                        BorderBrush="#808080" BorderThickness="1" CornerRadius="0" Margin="0,0,0,0">
+                    <Border BorderBrush="White" BorderThickness="1,1,0,0" Margin="1">
+                        <Label Content="Price" FontWeight="Bold" Foreground="Black" Padding="4,2" Margin="0"/>
+                    </Border>
+                </Border>
+            </StackPanel>
+
+            <!-- STATUS TEXTBOX -->
+            <TextBox Grid.Row="7" Grid.ColumnSpan="2"
+                     Margin="10,5,10,5"
+                     VerticalAlignment="Stretch"
+                     TextWrapping="Wrap"
+                     IsReadOnly="True"
+                     Background="White"
+                     BorderBrush="#A0A0A0"
+                     BorderThickness="2"
+                     FontFamily="Consolas"
+                     FontSize="11"
+                     Foreground="#000080"
+                     Padding="5"
+                     VerticalScrollBarVisibility="Auto"
+                     x:Name="StatusTextBox">
+                
+            </TextBox>
+
+            <!-- ENTER / RESET / EXIT BUTTONS -->
+            <StackPanel Grid.Row="8" Grid.ColumnSpan="2"
+                        Orientation="Horizontal"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Bottom"
+                        Margin="10,5,10,10">
+                <Button Content="Enter" Style="{StaticResource BoxedButtonStyle}" Width="60" Click="Enter_Click"/>
+                <Button Content="Reset" Style="{StaticResource BoxedButtonStyle}" Width="60" Click="Reset_Click"/>
+                <Button Content="Exit"  Style="{StaticResource BoxedButtonStyle}" Width="60" Click="Exit_Click"/>
+            </StackPanel>
         </Grid>
     </Grid>
 </Window>
