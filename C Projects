@@ -322,9 +322,9 @@
 
                 <StackPanel Grid.Column="2" Orientation="Horizontal" 
                             HorizontalAlignment="Right" VerticalAlignment="Center">
-                    <Button Content="_" Style="{StaticResource TitleButton}" Click="Minimize_Click"/>
-                    <Button Content="Square" Style="{StaticResource TitleButton}" Click="Maximize_Click"/>
-                    <Button Content="X" Style="{StaticResource TitleButton}" Click="Close_Click"/>
+                    <Button Content="━" Style="{StaticResource TitleButton}" Click="Minimize_Click"/>
+                    <Button Content="❒" Style="{StaticResource TitleButton}" Click="Maximize_Click"/>
+                    <Button Content="✖" Style="{StaticResource TitleButton}" Click="Close_Click"/>
                 </StackPanel>
             </Grid>
         </Border>
