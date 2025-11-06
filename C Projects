@@ -156,7 +156,12 @@
 
 ------------------------------------------------------------------------------------------------
 
-<Window x:Class="Car_Inventory.MainWindow"
+<!-- Sebastian Pineda
+    COSC 2100
+    20-10-2025-->
+    
+    
+    <Window x:Class="Car_Inventory.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -165,7 +170,7 @@
         mc:Ignorable="d"
         Title="Car Inventory" Height="350" Width="350"
         WindowStartupLocation="CenterScreen"
-        MinHeight="30" MinWidth="350"
+        MinHeight="30" MinWidth="3"
         Background="LightGray" FontFamily="Tahoma" FontSize="12"
         WindowStyle="None"
         AllowsTransparency="True">
@@ -446,8 +451,8 @@
                      Foreground="#000080"
                      Padding="5"
                      VerticalScrollBarVisibility="Auto"
-                     x:Name="StatusTextBox">
-                
+                     x:Name="StatusTextBox" MouseDown="StatusTextBox_MouseDown">
+
             </TextBox>
 
             <!-- ENTER / RESET / EXIT BUTTONS -->
@@ -463,3 +468,194 @@
         </Grid>
     </Grid>
 </Window>
+
+
+------------------------ C.  S --------------------------------------------------
+
+using System;
+using System.Collections.Generic;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Input;
+
+namespace Car_Inventory
+{
+    public partial class MainWindow : Window
+    {
+        private List<Vehicle> cars = new List<Vehicle>();
+        private Vehicle selectedCar = null;
+
+        public MainWindow()
+        {
+            InitializeComponent();
+            UpdateStatus("Ready.");
+        }
+
+        private void TitleBar_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if (e.LeftButton == MouseButtonState.Pressed)
+                DragMove();
+        }
+
+        private void Minimize_Click(object sender, RoutedEventArgs e) => WindowState = WindowState.Minimized;
+        private void Maximize_Click(object sender, RoutedEventArgs e) =>
+            WindowState = WindowState == WindowState.Maximized ? WindowState.Normal : WindowState.Maximized;
+        private void Close_Click(object sender, RoutedEventArgs e) => Close();
+
+        private void Enter_Click(object sender, RoutedEventArgs e)
+        {
+            if (!ValidateInputs(out string error))
+            {
+                UpdateStatus(error);
+                return;
+            }
+
+            string make = MakeText.Text.Trim();
+            string model = ModelText.Text.Trim();
+            int year = int.Parse(YearText.Text.Trim());
+            decimal price = decimal.Parse(PriceText.Text.Trim());
+            bool isNew = NewText.Text.Trim().ToUpper() == "Y" || NewText.Text.Trim().ToUpper() == "YES";
+
+            if (selectedCar != null)
+            {
+                selectedCar.Make = make;
+                selectedCar.Model = model;
+                selectedCar.Year = year;
+                selectedCar.Price = price;
+                selectedCar.IsNew = isNew;
+                UpdateStatus($"Modified: {selectedCar}");
+            }
+            else
+            {
+                Car newCar = new Car(make, model, year, price, isNew);
+                cars.Add(newCar);
+                UpdateStatus($"Added: {newCar} | Total: {Vehicle.Count}");
+            }
+
+            RefreshList();
+            ResetInputs();
+        }
+
+        private void ResetInputs()
+        {
+            MakeText.Text = "";
+            ModelText.Text = "";
+            YearText.Text = "";
+            PriceText.Text = "";
+            NewText.Text = "";
+            selectedCar = null;
+        }
+
+        private void Reset_Click(object sender, RoutedEventArgs e)
+        {
+            ResetInputs();
+            UpdateStatus("Cleared.");
+        }
+
+        private void Exit_Click(object sender, RoutedEventArgs e) => Close();
+
+        private void MakeDropdown_Click(object sender, RoutedEventArgs e)
+        {
+            string[] makes = { "Toyota", "Honda", "Ford", "Chevrolet", "Nissan", "BMW", "Mercedes", "Volkswagen" };
+            ShowMenu(MakeText, makes);
+        }
+
+        private void YearDropdown_Click(object sender, RoutedEventArgs e)
+        {
+            int year = DateTime.Now.Year;
+            string[] years = new string[20];
+            for (int i = 0; i < 20; i++) years[i] = (year - i).ToString();
+            ShowMenu(YearText, years);
+        }
+
+        private void ShowMenu(TextBox box, string[] items)
+        {
+            ContextMenu menu = new ContextMenu();
+            foreach (string item in items)
+            {
+                MenuItem mi = new MenuItem { Header = item };
+                mi.Click += (s, args) => { box.Text = item; menu.IsOpen = false; };
+                menu.Items.Add(mi);
+            }
+            menu.PlacementTarget = box;
+            menu.Placement = System.Windows.Controls.Primitives.PlacementMode.Bottom;
+            menu.IsOpen = true;
+        }
+
+        private bool ValidateInputs(out string error)
+        {
+            error = "";
+            List<string> errors = new List<string>();
+
+            if (string.IsNullOrWhiteSpace(MakeText.Text))
+                errors.Add("Make is required.");
+
+            if (string.IsNullOrWhiteSpace(ModelText.Text))
+                errors.Add("Model cannot be blank.");
+
+            if (!int.TryParse(YearText.Text, out int year) || year < 1886 || year > DateTime.Now.Year + 1)
+                errors.Add("Year must be 1886 to next year.");
+
+            if (!decimal.TryParse(PriceText.Text, out decimal price) || price < 0)
+                errors.Add("Price must be a positive number.");
+
+            if (errors.Count > 0)
+            {
+                error = "Validation Errors:\n" + string.Join("\n", errors);
+                return false;
+            }
+
+            return true;
+        }
+
+        private void UpdateStatus(string message)
+        {
+            StatusTextBox.Text = message + "\n" + StatusTextBox.Text;
+            StatusTextBox.ScrollToHome();
+        }
+
+        private void RefreshList()
+        {
+            string header = "New | ID  | Make       | Model      | Year | Price\n";
+            header += "----|-----|------------|------------|------|--------\n";
+            string list = "";
+            foreach (Vehicle car in cars)
+                list += car.ToString() + "\n";
+
+            StatusTextBox.Text = header + list + "\n" + StatusTextBox.Text;
+            StatusTextBox.ScrollToHome();
+        }
+
+        private void StatusTextBox_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            string text = StatusTextBox.Text;
+            int lineIndex = StatusTextBox.GetLineIndexFromCharacterIndex(StatusTextBox.CaretIndex);
+            if (lineIndex < 2) return;
+
+            string[] lines = text.Split('\n');
+            if (lineIndex >= lines.Length) return;
+
+            string line = lines[lineIndex].Trim();
+            if (line.Length < 6) return;
+
+            try
+            {
+                string idStr = line.Substring(6, 3).Trim();
+                if (int.TryParse(idStr, out int id))
+                {
+                    selectedCar = cars.Find(c => c.GetId() == id);
+                    if (selectedCar != null)
+                    {
+                        MakeText.Text = selectedCar.Make;
+                        ModelText.Text = selectedCar.Model;
+                        YearText.Text = selectedCar.Year.ToString();
+                        PriceText.Text = selectedCar.Price.ToString("F2");
+                        NewText.Text = selectedCar.IsNew ? "Y" : "N";
+                        UpdateStatus($"Editing ID: {id}");
+                    }
+                }
+            }
+            catch { }
+        }
+    }
+}
