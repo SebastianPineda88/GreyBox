@@ -1,0 +1,67 @@
+<?php 
+    
+    $name = "Sebastian Pineda";
+    $title = "Home Page";
+    $file = "w8ex1.php";
+    $date = "Oct 27, 2025";
+    $description = "This the first example of PHP";
+    $banner = "Week 8: Introduction to PHP";
+    
+
+    include("./includes/header.php");
+?>
+
+    <h2><?php echo "Name: "; ?></h2>
+    <h2><?php echo "Name: ".$name; ?></h2>
+    <?php
+        $num1 = 0;
+        $num2 = 0;
+
+        if(isset($_GET['num1']))
+            $num1 = $_GET['num1'];
+        if(isset($_GET['num2']))
+            $num2 = $_GET['num2'];
+        $result= $num1*$num2;
+    ?>
+
+    <h3>
+        <?php 
+            echo "The multiplication of $num1 and $num2 is $result";
+        ?>
+    </h3>
+
+    <table border="1">
+        <tr>
+            <th>NUM</th>
+            <th>TITLE</th>
+            <th>YEAR</th>
+        </tr>
+        <?php
+            //Retrieve records from the database
+            //1. Open connection with database
+            $conn = pg_connect("host=127.0.0.1 port=5434 dbname=alzghoolm_db user=alzghoolm password=12345");
+            //2. Issue sql query
+            $sql = "SELECT * FROM movies ORDER BY year ASC";
+            //3. Run the sql Query
+            $result = pg_query($conn,$sql);
+            $records = pg_num_rows($result);
+            //4-Generate the table
+            $output ="";
+            for($i=0;$i <$records;$i++){
+                $num = pg_fetch_result($result,$i,"movie_num");
+                $title = pg_fetch_result($result,$i,"title");
+                $year = pg_fetch_result($result,$i,"year");
+                $output.="<tr>
+                            <td>$num</td>
+                            <td>$title</td>
+                            <td>$year</td>
+                          </tr>";
+            }
+            echo $output;
+
+        ?>
+    </table>
+
+<?php
+    include("./includes/footer.php");
+?>
