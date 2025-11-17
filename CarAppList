@@ -243,3 +243,285 @@ namespace CarList2025
     }
 }
 </Window>
+
+//VEHICLE.CS FILE -------------------------------------------------------------------------------------------------------------------
+
+// Author:  Kyle Chapman
+// Created: October 16, 2025
+// Updated: October 16, 2025
+// Description: Defines a generic vehicle to be inherited by diferent vehicle types for display.
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace CarList2025
+{
+    internal abstract class Vehicle
+    {
+        protected static int count = 0;
+
+        // Declared and initialized Variables
+        protected string make = String.Empty;
+        protected string model = String.Empty;
+        protected int year = DateTime.Now.Year;
+        protected decimal price = 0.0M;
+        protected bool isNew = false;
+        protected int id = count;
+
+        /// <summary>
+        /// A default constructor
+        /// </summary>
+        public Vehicle()
+        {
+            count++;
+            id = count;
+        }
+
+        /// <summary>
+        /// An accessor that returns the make of the car
+        /// </summary>
+        /// <returns></returns>
+        public string Make { get { return make; } set { make = value; } }
+
+        /// <summary>
+        /// An accessor that returns the model of the car
+        /// </summary>
+        /// <returns></returns>
+        public string Model { get { return model; } set { model = value; } }
+
+        /// <summary>
+        /// An accessor that returns the year of the car
+        /// </summary>
+        /// <returns></returns>
+        public int Year { get { return year; } set { year = value; } }
+
+        /// <summary>
+        /// An accessor that returns the colour of the car
+        /// </summary>
+        /// <returns></returns>
+        public decimal Price { get { return price; } set { price = value; } }
+
+        /// <summary>
+        /// An accessor that returns the if the car is new or old
+        /// </summary>
+        /// <returns></returns>
+        public bool IsNew { get { return isNew; } set { isNew = value; } }
+
+        /// <summary>
+        /// An accessor that returns car's unique identifier.
+        /// </summary>
+        /// <returns></returns>
+        public int IdentificationNumber { get { return id; } }
+
+        /// <summary>
+        /// Returns the number of vehicles created.
+        /// </summary>
+        /// <returns></returns>
+        public static int Count { get { return count; } }
+
+        /// <summary>
+        /// Returns a string version of the vehicle.
+        /// </summary>
+        /// <returns>A string version of the vehicle.</returns>
+        public override string ToString()
+        {
+            return Year + " " + Make + " " + Model;
+        }
+
+    }
+}
+
+
+
+// CAR.CS file ---------------------------------------------------------------------------------------------------------------------------------------
+
+// Author:  Brendan Obilo & Kyle Chapman
+// Created at:    October 18, 2024
+// Modified at:  October 16, 2025
+// Description:
+// A class that deals with the input from user. The input includes, Car’s make (or manufacturer),
+// model, year, colour, price, and whether it is new or not (as a Boolean).
+// It Uses this parameters and adds to the car list that displays on the textBlock.
+// Created by inheriting a vehicle class.
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace CarList2025
+{
+    internal class Car : Vehicle
+    {
+        /// <summary>
+        /// A default constructor
+        /// </summary>
+        public Car() : base() { }
+
+        /// <summary>
+        /// A parameterized constructor that accepts various paramterized
+        /// And sets them to the private variables
+        /// </summary>
+        /// <param name="carMake"> The make of the car entered by user</param>
+        /// <param name="carModel"> The model of the car entered by user</param>
+        /// <param name="carYear"> The Year the car was made as entered by user</param>
+        /// <param name="carPrice"> The price of the car as entered by the user</param>
+        /// <param name="isCarNew"> A parameter than determines if the car is new or not</param>
+        public Car(string carMake, string carModel, int carYear, decimal carPrice, bool isCarNew) : base()
+        {
+            make = carMake;
+            model = carModel;
+            year = carYear;
+            price = carPrice;
+            isNew = isCarNew;
+        }
+
+        /// <summary>
+        /// Returns a string version of the Car.
+        /// </summary>
+        /// <returns>A string version of the Car.</returns>
+        public override string ToString()
+        {
+            return Year + " " + Make + " " + Model + " (Car)";
+        }
+
+    }
+}
+
+
+//XMAL FILE 2 -----------------------------------------------------
+
+<Window x:Class="CarList2025.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:CarList2025"
+        mc:Ignorable="d"
+        Title="Car Inventory" WindowStartupLocation="CenterScreen"
+        MinHeight="400" MinWidth="500"
+        Height="450" Width="600">
+
+    <DockPanel>
+
+        
+        <StatusBar DockPanel.Dock="Bottom" Height="25">
+            <StatusBarItem>
+                <TextBlock x:Name="TextBox" Text="Ready"/>
+            </StatusBarItem>
+        </StatusBar>
+
+        
+        <TabControl DockPanel.Dock="Top">
+
+            
+            <TabItem Header="Add Vehicles">
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <StackPanel Margin="10">
+
+                        
+                        <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                            <Label Content="Vehicle Type:" VerticalAlignment="Center"/>
+                            <ComboBox x:Name="comboVehicleType" Width="120" Margin="5,0,0,0">
+                                <ComboBoxItem Content="Car" IsSelected="True"/>
+                                <ComboBoxItem Content="Boat"/>
+                            </ComboBox>
+                        </StackPanel>
+
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="100"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+
+                            
+                            <Label Content="_Make:" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+                            <ComboBox x:Name="comboMake" Grid.Row="0" Grid.Column="1" Margin="5" ToolTip="Select the manufacturer of the vehicle">
+                                <ComboBoxItem>BMW</ComboBoxItem>
+                                <ComboBoxItem>Honda</ComboBoxItem>
+                                <ComboBoxItem>Hyundai</ComboBoxItem>
+                                <ComboBoxItem>Ford</ComboBoxItem>
+                                <ComboBoxItem>Dodge</ComboBoxItem>
+                                <ComboBoxItem>Ferrari</ComboBoxItem>
+                                <ComboBoxItem>Porsche</ComboBoxItem>
+                                <ComboBoxItem>Rolls Royce</ComboBoxItem>
+                                <ComboBoxItem>Kia</ComboBoxItem>
+                                <ComboBoxItem>Lamborghini</ComboBoxItem>
+                                <ComboBoxItem>DMC</ComboBoxItem>
+                            </ComboBox>
+
+                            
+                            <Label Content="M_odel:" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+                            <TextBox x:Name="textModel" Grid.Row="1" Grid.Column="1" Margin="5" ToolTip="Enter the model of the vehicle"/>
+
+                            
+                            <Label Content="_Year:" Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+                            <ComboBox x:Name="comboYear" Grid.Row="2" Grid.Column="1" Margin="5" ToolTip="Select the year of production"/>
+
+                            
+                            <Label Content="_Price:" Grid.Row="3" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+                            <TextBox x:Name="textPrice" Grid.Row="3" Grid.Column="1" Margin="5" ToolTip="Enter the price of the vehicle"/>
+
+                            
+                            <CheckBox x:Name="checkIsNew" Grid.Row="4" Grid.Column="1" Content="_New?" HorizontalAlignment="Left" Margin="5"/>
+                        </Grid>
+
+                        
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,10,0,0">
+                            <Button x:Name="buttonEnter" Content="_Enter" MinWidth="60" Margin="5" Click="EnterClick"/>
+                            <Button x:Name="buttonReset" Content="_Reset" MinWidth="60" Margin="5" Click="ResetClick"/>
+                            <Button x:Name="buttonExit" Content="E_xit" MinWidth="60" Margin="5" Click="ExitClick"/>
+                        </StackPanel>
+
+                    </StackPanel>
+                </ScrollViewer>
+            </TabItem>
+
+            
+            <TabItem Header="Vehicle List">
+                <StackPanel Margin="10">
+                    <ListView x:Name="listViewVehicles" MinHeight="200">
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn DisplayMemberBinding="{Binding Type}" Width="50" Header="Type"/>
+                                <GridViewColumn DisplayMemberBinding="{Binding IdentificationNumber}" Width="30" Header="ID"/>
+                                <GridViewColumn DisplayMemberBinding="{Binding Make}" Width="80" Header="Make"/>
+                                <GridViewColumn DisplayMemberBinding="{Binding Model}" Width="80" Header="Model"/>
+                                <GridViewColumn DisplayMemberBinding="{Binding Year}" Width="50" Header="Year"/>
+                                <GridViewColumn DisplayMemberBinding="{Binding Price, StringFormat='c'}" Width="70" Header="Price"/>
+                                <GridViewColumn DisplayMemberBinding="{Binding IsNew}" Width="50" Header="New?"/>
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                </StackPanel>
+            </TabItem>
+
+            
+            <TabItem Header="Statistics">
+                <StackPanel Margin="10">
+                    <Label x:Name="labelTotalVehicles" Content="Total Vehicles: 0" FontWeight="Bold"/>
+                    <Label x:Name="labelTotalPrice" Content="Total Price: $0.00" FontWeight="Bold"/>
+                    <Label x:Name="labelAveragePrice" Content="Average Price: $0.00" FontWeight="Bold"/>
+                </StackPanel>
+            </TabItem>
+
+        </TabControl>
+    </DockPanel>
+</Window>
+
+
+
+
+
+
