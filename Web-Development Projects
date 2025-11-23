@@ -3,8 +3,9 @@
 // Sebastian Pineda
 // Week 8: Introduction to PHP
 
+
 $name = "Sebastian Pineda";
-$title = "Home Page";
+$title = "Index Page";
 $file = "index.php";
 $date = "Oct 27, 2025";
 $description = "Index Page";
@@ -16,7 +17,14 @@ include_once("./includes/functions.php");
 $conn = db_connect();
 prepare_statements($conn); 
 
-// Fix: correct column names
+
+echo "<div class='container mt-4'>
+        <h1>{$title}</h1>
+        <p> {$name}</p>
+        <p> {$banner}</p>
+      </div>";
+
+
 $sql = "
     SELECT s.student_id, u.first_name, u.last_name, s.program_code
     FROM students s
@@ -24,24 +32,26 @@ $sql = "
     ORDER BY u.last_name ASC
 ";
 
-// Deallocate the statement first to avoid "already exists" error
+
 @pg_query($conn, "DEALLOCATE get_students");
 
-// Prepare and execute
+
 pg_prepare($conn, "get_students", $sql);
 $result = pg_execute($conn, "get_students", array());
 
+
 if ($result) {
-    echo "<table class='table table-striped mt-3'>
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>First Name</th>
-                    <th>Last Name</th>
-                    <th>Program</th>
-                </tr>
-            </thead>
-            <tbody>";
+    echo "<div class='container mt-4'>
+            <table class='table table-striped'>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                        <th>Program</th>
+                    </tr>
+                </thead>
+                <tbody>";
 
     while ($row = pg_fetch_assoc($result)) {
         echo "<tr>
@@ -52,14 +62,13 @@ if ($result) {
               </tr>";
     }
 
-    echo "</tbody></table>";
+    echo "</tbody></table></div>";
 } else {
     echo "<p style='color:red;'>Error: Could not retrieve students data.</p>";
 }
 
 include("./includes/footer.php");
+
+
+ob_end_flush();
 ?>
-echo "</tbody></table>";
-
-
-include("./includes/footer.php");
