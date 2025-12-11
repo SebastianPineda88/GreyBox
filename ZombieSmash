@@ -1,0 +1,111 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class PlayerScript : MonoBehaviour
+
+{
+
+    private float speed = 10f;
+
+    public float Minspeed = 10f;
+
+    public float Maxspeed = 20f;
+
+    public float jumpForce = 5f;
+
+    //Camara
+
+    public float Sensibility = 10f;
+
+    public float LimitX = 60f;
+
+    public float LimitY = -60f;
+
+    public Transform cam;
+
+    private float rotX;
+
+    private float rotY;
+
+
+    // Jump
+
+    public bool IsGrounded;
+
+    private Rigidbody rb;
+
+    void Start()
+    {
+
+        rb = GetComponent<Rigidbody>();
+
+
+    }
+
+    void Update()
+    {
+        float x = Input.GetAxis("Horizontal");
+        float y = Input.GetAxis("Vertical");
+
+        if (Input.GetKey(KeyCode.LeftShift))
+        {
+            speed = Maxspeed;
+        }
+        else
+        {
+            speed = Minspeed;
+        }
+
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            Jump();
+        }
+
+        transform.Translate(new Vector3(x, 0, y) * Time.deltaTime * speed);
+
+
+        //Camara 
+
+        rotX += Input.GetAxis("Mouse Y") * Sensibility;
+        rotX = Mathf.Clamp(rotX, -LimitX, LimitX);
+
+        cam.localRotation = Quaternion.Euler(-rotX, 0, 0);
+
+        transform.rotation *= Quaternion.Euler(0, Input.GetAxis("Mouse X") * Sensibility, 0);
+
+    }
+
+    public void Jump() {
+
+        if (IsGrounded)
+        {
+            rb.AddForce(new Vector3(0, jumpForce, 0), ForceMode.Impulse);
+        }
+
+
+    }
+
+    public void OnCollisionStay(Collision collision)
+    {
+        if (collision.gameObject.tag == "Ground")
+            
+        {
+            IsGrounded = true;
+        }
+
+    }
+
+    public void OnCollisionExit(Collision collision)
+
+    {
+
+        if (collision.gameObject.tag == "Ground")
+        {
+            IsGrounded = false;
+
+        }
+    } 
+
+}
+
